@@ -5,7 +5,9 @@ import com.banana.bananawhatsapp.modelos.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface IMensajeRepository {
     public Mensaje crear(Mensaje mensaje) throws SQLException;
 

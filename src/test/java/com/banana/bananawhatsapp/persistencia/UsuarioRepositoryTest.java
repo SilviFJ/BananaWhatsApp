@@ -1,12 +1,34 @@
 package com.banana.bananawhatsapp.persistencia;
 
+import com.banana.bananawhatsapp.modelos.Usuario;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.banana.bananawhatsapp.config.SpringConfig;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {SpringConfig.class})
 class UsuarioRepositoryTest {
-    IUsuarioRepository repo;
+
+    @Autowired
+    private IUsuarioRepository repo;
+    //IUsuarioRepository repo;
 
     @Test
-    void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() {
+    void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() throws SQLException {
+        Usuario c = new Usuario(null, "Pedro Juan", "jj@j.com", LocalDate.now(), true);
+        c = repo.crear(c);
+        assertNotNull(c.getId());
     }
 
     @Test
