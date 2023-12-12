@@ -12,6 +12,7 @@ public interface IMensajeRepository {
     public Mensaje crear(Mensaje mensaje) throws SQLException;
 
     public List<Mensaje> obtener(Usuario usuario) throws SQLException;
+    public Mensaje getSMSById(Integer id) throws Exception;
 
     public boolean borrarTodos(Usuario usuario) throws SQLException;
 }

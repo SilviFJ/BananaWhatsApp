@@ -11,30 +11,29 @@ import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
 @Getter
 @Setter
-public class MensajeRepo implements IMensajeRepository{
+public class UsuarioRepo implements IUsuarioRepository {
     private String db_url;
     @Override
-    public Mensaje crear(Mensaje mensaje) throws SQLException {
+    public Usuario crear(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO mensaje values (NULL,?,?,?,?)";
 
         try (
                 Connection conn = DriverManager.getConnection(db_url);
                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ) {
-
-            stmt.setString(2, mensaje.getCuerpo().toString());
-            stmt.setDate(3, Date.valueOf(mensaje.getFecha()));
-            stmt.setInt(4, mensaje.getRemitente().getId());
-            stmt.setInt(5, mensaje.getDestinatario().getId());
+            stmt.setBoolean(2, usuario.isActivo());
+            stmt.setDate(3, Date.valueOf(usuario.getAlta()));
+            stmt.setString(4, usuario.getEmail());
+            stmt.setString(5, usuario.getNombre());
 
             int rows = stmt.executeUpdate();
 
             ResultSet genKeys = stmt.getGeneratedKeys();
             if (genKeys.next()) {
-                mensaje.setId(genKeys.getInt(1));
+                usuario.setId(genKeys.getInt(1));
             } else {
                 throw new SQLException("Mensaje creado erroneamente!!!");
             }
@@ -48,59 +47,32 @@ public class MensajeRepo implements IMensajeRepository{
             }
         }
 
-        return mensaje;
+        return usuario;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
-    public List<Mensaje> obtener(Usuario usuario) throws SQLException {
+    public Usuario actualizar(Usuario usuario) throws SQLException {
         return null;
     }
 
     @Override
-    public Mensaje getSMSById(Integer id) throws Exception {
-        return null;
-    }
-
-    @Override
-    public boolean borrarTodos(Usuario usuario) throws SQLException {
+    public boolean borrar(Usuario usuario) throws SQLException {
         return false;
     }
+
+    @Override
+    public Usuario getUsuarioById(Integer id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Set<Usuario> obtenerPosiblesDestinatarios(Integer id, Integer max) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getdb_url() {
+        return this.db_url;
+    }
+
 }
