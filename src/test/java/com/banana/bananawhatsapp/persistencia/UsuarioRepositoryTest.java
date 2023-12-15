@@ -14,8 +14,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {SpringConfig.class})
 class UsuarioRepositoryTest {
@@ -26,9 +24,9 @@ class UsuarioRepositoryTest {
 
     @Test
     void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() throws SQLException {
-        Usuario c = new Usuario(null, "Pedro Juan", "jj@j.com", LocalDate.now(), true);
-        c = repo.crear(c);
-        assertNotNull(c.getId());
+        Usuario usuario = new Usuario(null, "Pedro Juan", "jj@j.com", LocalDate.now(), true);
+         Usuario usuarioCreado = repo.crear(usuario);
+        assertNotNull(usuario.getId());
     }
 
     @Test
