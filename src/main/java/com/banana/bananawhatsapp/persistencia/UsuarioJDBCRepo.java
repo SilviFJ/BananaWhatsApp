@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.*;
-import java.util.Set;
+
 @Setter
 @Getter
 public class UsuarioJDBCRepo implements IUsuarioRepository{
@@ -42,16 +42,76 @@ public class UsuarioJDBCRepo implements IUsuarioRepository{
 
     @Override
     public Usuario actualizar(Usuario usuario) throws SQLException {
-        return null;
+        String sql = "UPDATE usuario set nombre = ?, email = ? WHERE id = ?";
+        try (
+            Connection conn = DriverManager.getConnection(db_url);
+            /*PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)*/
+            PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            usuario.valido();
+            stmt.setString(1,usuario.getNombre());
+            stmt.setString(2,usuario.getEmail());
+            stmt.setInt(3,usuario.getId());
+
+            int rows = stmt.executeUpdate();
+            /*ResultSet genKeys = stmt.getGeneratedKeys();
+            if (genKeys.next()){
+                usuario.setId(genKeys.getInt(2));
+            } else {
+                throw new SQLException("Mail no correcto");
+            }*/
+            if (rows == 0){
+                throw new SQLException("No se actualizo ningun registro");
+            }
+        } catch (UsuarioException e){
+            e.printStackTrace();
+            throw new UsuarioException("Error al actualizar el usuario");
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new SQLException(e);
+        }
+        return usuario;
     }
 
     @Override
-    public boolean borrar(Usuario usuario) throws SQLException {
-        return false;
+    public boolean borrar(Usuario usuario) throws SQLException{
+        String sql = "DELETE FROM usuario WHERE id = ?";
+        try (
+            Connection conn = DriverManager.getConnection(db_url);
+            PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            stmt.setInt(1,usuario.getId());
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new SQLException("Error al borrar el usuario de la base de datos");
+        }
     }
 
     @Override
-    public Set<Usuario> obtenerPosiblesDestinatarios(Integer id, Integer max) throws SQLException {
-        return null;
+    public Usuario obtenerUsuariobyID(String usuario, Integer id) throws SQLException {
+        String sql = "SELECT * FROM usuario WHERE id = ?";
+        try (
+            Connection conn = DriverManager.getConnection(db_url);
+            /*PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)*/
+            PreparedStatement stmt = conn.prepareStatement(sql);
+        ) {
+            stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()){
+                Usuario usuarioEncontrado = new Usuario();
+                usuarioEncontrado.setId(resultSet.getInt("id"));
+                usuarioEncontrado.setNombre(resultSet.getString("nombre"));
+                usuarioEncontrado.setEmail(resultSet.getString("email"));
+                return usuarioEncontrado;
+            } else {
+                throw new SQLException("Usuario no encontrado");
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new SQLException(e);
+        }
     }
 }

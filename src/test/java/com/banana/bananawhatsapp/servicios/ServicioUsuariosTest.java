@@ -3,6 +3,7 @@ package com.banana.bananawhatsapp.servicios;
 import com.banana.bananawhatsapp.config.SpringConfig;
 import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Usuario;
+import com.banana.bananawhatsapp.persistencia.IUsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ class ServicioUsuariosTest {
 
     @Autowired
     IServicioUsuarios servicio;
-
     @Test
     void dadoUnUsuarioValido_cuandoCrearUsuario_entoncesUsuarioValido() throws Exception {
         Usuario nuevo = new Usuario(null,"Carmen","carmen@dxc.com", LocalDate.now(), true);

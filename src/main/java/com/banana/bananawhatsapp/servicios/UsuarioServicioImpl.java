@@ -24,6 +24,7 @@ public class UsuarioServicioImpl implements IServicioUsuarios {
         return usuario;
     }
 
+
     @Override
     public boolean borrarUsuario(Usuario usuario) throws UsuarioException {
         return false;
@@ -38,4 +39,5 @@ public class UsuarioServicioImpl implements IServicioUsuarios {
     public Usuario obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
         return null;
     }
+
 }
