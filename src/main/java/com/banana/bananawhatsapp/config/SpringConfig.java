@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(ReposConfig.class)
-@ComponentScan({"com.banana.bananawhatsapp.persistencia"})
+@ComponentScan({"com.banana.bananawhatsapp.servicios"})
 public class SpringConfig {
     /*@Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
