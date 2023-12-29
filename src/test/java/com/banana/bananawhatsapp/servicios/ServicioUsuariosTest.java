@@ -15,8 +15,7 @@ import java.time.LocalDate;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {SpringConfig.class})
@@ -43,25 +42,38 @@ class ServicioUsuariosTest {
 
     @Test
     void dadoUnUsuarioValido_cuandoBorrarUsuario_entoncesUsuarioValido() {
+        Usuario nuevoUsuario = new Usuario(null,"Cecilia","Cecilia@dxc.com", LocalDate.now(), true);
+        Usuario usuarioGuardado = servicio.crearUsuario(nuevoUsuario);
+        assertThat(usuarioGuardado, notNullValue());
+        assertNotNull(usuarioGuardado.getId());
+
+        boolean borrado = servicio.borrarUsuario(usuarioGuardado);
+        assertTrue(borrado);
     }
 
     @Test
     void dadoUnUsuarioNOValido_cuandoBorrarUsuario_entoncesExcepcion() {
+        Usuario nuevoInvalido = new Usuario(null,"Cecilia","Cecilia@dxc.com", LocalDate.now(), true);
+        assertThrows(NullPointerException.class, () -> {
+            servicio.borrarUsuario(nuevoInvalido);
+        });
     }
 
     @Test
     void dadoUnUsuarioValido_cuandoActualizarUsuario_entoncesUsuarioValido() {
+        Usuario usuarioExistente = new Usuario(1,"Juana","juana@j.com", LocalDate.now(), true);
+        String nuevoNombre = "Juanita";
+        usuarioExistente.setNombre(nuevoNombre);
+        Usuario usuarioActualizado = servicio.actualizarUsuario(usuarioExistente);
+        assertNotNull(usuarioActualizado);
+        assertEquals(nuevoNombre, usuarioActualizado.getNombre());
     }
 
     @Test
     void dadoUnUsuarioNOValido_cuandoActualizarUsuario_entoncesExcepcion() {
-    }
-
-    @Test
-    void dadoUnUsuarioValido_cuandoObtenerPosiblesDesinatarios_entoncesUsuarioValido() {
-    }
-
-    @Test
-    void dadoUnUsuarioNOValido_cuandoObtenerPosiblesDesinatarios_entoncesExcepcion() {
+        Usuario usuarioInvalido = new Usuario(null,"Juana","juana@j.com", LocalDate.now(), true);
+        assertThrows(NullPointerException.class, () -> {
+            servicio.actualizarUsuario(usuarioInvalido);
+        });
     }
 }

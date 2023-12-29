@@ -9,6 +9,4 @@ public interface IServicioUsuarios {
     public boolean borrarUsuario(Usuario usuario) throws UsuarioException;
 
     public Usuario actualizarUsuario(Usuario usuario) throws UsuarioException;
-
-    public Usuario obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException;
-}
+    }

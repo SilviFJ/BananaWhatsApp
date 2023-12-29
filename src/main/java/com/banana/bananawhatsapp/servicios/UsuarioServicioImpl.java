@@ -27,17 +27,23 @@ public class UsuarioServicioImpl implements IServicioUsuarios {
 
     @Override
     public boolean borrarUsuario(Usuario usuario) throws UsuarioException {
-        return false;
+        try {
+            return usuarioRepo.borrar(usuario);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new UsuarioException("Error al borrar el usuario: " + e.getMessage());
+        }
     }
 
     @Override
     public Usuario actualizarUsuario(Usuario usuario) throws UsuarioException {
-        return null;
+        try {
+            return usuarioRepo.actualizar(usuario);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new UsuarioException("Error al actualizar el usuario: " + e.getMessage());
+        }
     }
 
-    @Override
-    public Usuario obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
-        return null;
-    }
 
 }

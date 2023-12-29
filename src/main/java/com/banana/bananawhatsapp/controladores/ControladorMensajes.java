@@ -1,9 +1,12 @@
 package com.banana.bananawhatsapp.controladores;
 
+import com.banana.bananawhatsapp.exceptions.MensajeException;
+import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Mensaje;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import com.banana.bananawhatsapp.servicios.IServicioMensajeria;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ControladorMensajes {
@@ -19,9 +22,12 @@ public class ControladorMensajes {
             Mensaje mensaje = servicioMensajeria.enviarMensaje(uRemitente, uDestinatario, texto);
             System.out.println("Mensaje enviado: " + mensaje);
             return true;
+        } catch (UsuarioException | MensajeException e) {
+            System.out.println("Error al enviar el mensaje: " + e.getMessage());
+            throw e;
         } catch (Exception e) {
             System.out.println("Ha habido un error: " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Ha habido un error", e);
         }
 
     }
@@ -45,7 +51,7 @@ public class ControladorMensajes {
             return true;
         } catch (Exception e) {
             System.out.println("Ha habido un error: " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Ha habido un error", e);
         }
 
     }
@@ -66,7 +72,7 @@ public class ControladorMensajes {
             return isOK;
         } catch (Exception e) {
             System.out.println("Ha habido un error: " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Ha habido un error", e);
         }
 
     }
