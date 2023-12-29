@@ -3,6 +3,7 @@ package com.banana.bananawhatsapp.config;
 import com.banana.bananawhatsapp.persistencia.IMensajeRepository;
 import com.banana.bananawhatsapp.persistencia.IUsuarioRepository;
 import com.banana.bananawhatsapp.persistencia.UsuarioJDBCRepo;
+import com.banana.bananawhatsapp.persistencia.MensajeJDBCRepo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,13 @@ public class ReposConfig {
     @Bean
     IUsuarioRepository createIUsuarioRepository(){
         UsuarioJDBCRepo repo = new UsuarioJDBCRepo();
+        repo.setDb_url(dbUrl);
+        return repo;
+    }
+
+    @Bean
+    IMensajeRepository createIMensajeRepository(){
+        MensajeJDBCRepo repo = new MensajeJDBCRepo();
         repo.setDb_url(dbUrl);
         return repo;
     }
