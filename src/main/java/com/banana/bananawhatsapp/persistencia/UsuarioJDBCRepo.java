@@ -75,17 +75,59 @@ public class UsuarioJDBCRepo implements IUsuarioRepository{
 
     @Override
     public boolean borrar(Usuario usuario) throws SQLException{
-        String sql = "DELETE FROM usuario WHERE id = ?";
-        try (
-            Connection conn = DriverManager.getConnection(db_url);
-            PreparedStatement stmt = conn.prepareStatement(sql)
-        ) {
-            stmt.setInt(1,usuario.getId());
-            int rows = stmt.executeUpdate();
-            return rows > 0;
+        //String sql = "DELETE FROM usuario WHERE id = ?";
+        //try (
+        //    Connection conn = DriverManager.getConnection(db_url);
+        //    PreparedStatement stmt = conn.prepareStatement(sql)
+        //) {
+        //    stmt.setInt(1,usuario.getId());
+        //    int rows = stmt.executeUpdate();
+        //    return rows > 0;
+        //} catch (SQLException e){
+        //    e.printStackTrace();
+        //    throw new SQLException("Error al borrar el usuario de la base de datos");
+        //}
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(db_url);
+            //Se deshabilita el autocommit
+            conn.setAutoCommit(false);
+            //Eliminar los mensajes del usuario
+            borrarMensajesUsuario(usuario, conn);
+            // Eliminar el usuario
+            String sql = "DELETE FROM usuario WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)){
+                stmt.setInt(1, usuario.getId());
+                int rows = stmt.executeUpdate();
+                if (rows == 0){
+                    throw new SQLException("No se elimino ningun registro");
+                }
+            }
+            //Commit
+            conn.commit();
+            return true;
         } catch (SQLException e){
-            e.printStackTrace();
-            throw new SQLException("Error al borrar el usuario de la base de datos");
+            //Se hace rollback en caso de error
+            if (conn != null){
+                conn.rollback();
+            }
+            throw e;
+        } finally {
+            // se cierra la conexion
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
+
+    private void borrarMensajesUsuario(Usuario usuario, Connection conn){
+        String sql = "DELETE FROM mensaje WHERE to_user = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, usuario.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
