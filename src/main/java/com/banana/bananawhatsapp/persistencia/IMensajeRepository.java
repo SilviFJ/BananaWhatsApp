@@ -11,6 +11,6 @@ public interface IMensajeRepository {
 
     public List<Mensaje> obtener(Usuario usuario) throws SQLException;
 
-    public boolean borrarTodos(Usuario usuario) throws SQLException;
+    public boolean borrarTodos(Usuario usuario1, Usuario usuario2) throws SQLException;
 
 }

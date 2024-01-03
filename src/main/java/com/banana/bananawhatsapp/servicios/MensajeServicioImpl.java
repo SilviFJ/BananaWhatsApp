@@ -47,7 +47,7 @@ public class MensajeServicioImpl implements IServicioMensajeria {
             throw new UsuarioException("El remitente y el destinatario tienen que ser usuarios validos");
         }
         try {
-            mensajeRepo.borrarTodos(destinatario);
+            mensajeRepo.borrarTodos(remitente, destinatario);
             return true;
         } catch (Exception e) {
             throw new MensajeException("Error al borrar el chat: " + e.getMessage());

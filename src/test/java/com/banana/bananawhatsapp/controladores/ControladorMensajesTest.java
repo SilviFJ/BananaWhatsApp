@@ -73,23 +73,30 @@ class ControladorMensajesTest {
     void dadoRemitenteYDestinatarioValidos_cuandoEliminarChatConUsuario_entoncesOK() throws SQLException {
         MensajeJDBCRepo mensajeJDBCRepo = new MensajeJDBCRepo();
         mensajeJDBCRepo.setDb_url("jdbc:mysql://localhost/bananawhatsappdb?user=bananauser&password=banana123");
-        Usuario usuario = new Usuario(1, "Pedro", "pedro@dxc.com", LocalDate.now(), true);
+        Usuario usuario1 = new Usuario(1, "Pedro", "pedro@dxc.com", LocalDate.now(), true);
+        Usuario usuario2 = new Usuario(2, "Luis", "luis@dxc.com", LocalDate.now(), true);
         //Obtenemos la lista de mensajes antes de borrarlos
-        List<Mensaje> mensajesAntes = mensajeJDBCRepo.obtener(usuario);
-        int cantidadMensajesAntes = mensajesAntes.size();
+        List<Mensaje> mensajesAntesUsuario1 = mensajeJDBCRepo.obtener(usuario1);
+        List<Mensaje> mensajesAntesUsuario2 = mensajeJDBCRepo.obtener(usuario2);
+        int cantidadMensajesAntesUsuario1 = mensajesAntesUsuario1.size();
+        int cantidadMensajesAntesUsuario2 = mensajesAntesUsuario2.size();
         //Se borran todos los mensajes para el usuario
-        mensajeJDBCRepo.borrarTodos(usuario);
+        mensajeJDBCRepo.borrarTodos(usuario1, usuario2);
         //Obtener la cantidad de mensajes despues de borrar
-        List<Mensaje> mensajesDespues = mensajeJDBCRepo.obtener(usuario);
-        int cantidadMensajesDespues = mensajesDespues.size();
+        List<Mensaje> mensajesDespuesUsuario1 = mensajeJDBCRepo.obtener(usuario1);
+        List<Mensaje> mensajesDespuesUsuario2 = mensajeJDBCRepo.obtener(usuario2);
+        int cantidadMensajesDespuesUsuario1 = mensajesDespuesUsuario1.size();
+        int cantidadMensajesDespuesUsuario2 = mensajesDespuesUsuario2.size();
         // Se verifica que la cantidad de mensajes es 0
-        assertEquals(0, cantidadMensajesDespues);
+        assertEquals(0, cantidadMensajesDespuesUsuario1);
+        assertEquals(0, cantidadMensajesDespuesUsuario2);
     }
 
     @Test
     void dadoRemitenteYDestinatarioNOValidos_cuandoEliminarChatConUsuario_entoncesExcepcion() {
         MensajeJDBCRepo mensajeJDBCRepo = new MensajeJDBCRepo();
-        Usuario usuarioNoValido =  new Usuario(null, "Pedro", "pedro@dxc.com", LocalDate.now(), true);
-        assertThrows(SQLException.class, () -> mensajeJDBCRepo.borrarTodos(usuarioNoValido));
+        Usuario remitenteNoValido =  new Usuario(null, "Pedro", "pedro@dxc.com", LocalDate.now(), true);
+        Usuario destinatarioNoValido =  new Usuario(null, "Juan", "juan@dxc.com", LocalDate.now(), true);
+        assertThrows(SQLException.class, () -> mensajeJDBCRepo.borrarTodos(remitenteNoValido, destinatarioNoValido));
     }
 }
